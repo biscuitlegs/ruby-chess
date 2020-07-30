@@ -35,7 +35,7 @@ describe "Board" do
         it "places a piece on the board" do
             expect(board.squares[0][0].piece).to eql(nil)
             board.place_piece("King", "c5")
-            expect(board.squares[4][2].piece).to eql("King")
+            expect(board.squares[4][2].piece.name).to eql("King")
         end
     end
 

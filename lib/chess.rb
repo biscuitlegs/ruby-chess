@@ -18,7 +18,7 @@ class Board
     end
 
     def letter_to_number(given_letter)
-        ("a".."g").each_with_index do |letter, index|
+        ("a".."h").each_with_index do |letter, index|
             return index + 1 if given_letter == letter
         end
     end

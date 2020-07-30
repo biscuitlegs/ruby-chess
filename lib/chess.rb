@@ -5,6 +5,10 @@ class Board
         @squares = Array.new(8) { Array.new(8) { square ? square : Square.new } }
     end
 
+    def place_piece(piece, position)
+        get_square(position).piece = piece
+    end
+
     def get_square(position)
         until valid_position?(position)
             puts invalid_position_message
@@ -38,7 +42,7 @@ class Board
 end
 
 class Square
-    attr_reader :piece
+    attr_accessor :piece
 
     def initialize(piece=nil)
         @piece = piece

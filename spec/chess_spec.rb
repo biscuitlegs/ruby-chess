@@ -138,3 +138,16 @@ describe "Piece" do
         end
     end
 end
+
+describe "Player" do
+    context "when no name is given" do
+        it "names the player as 'Player'" do
+            expect(Player.new.name).to eql("Player")
+        end
+    end
+    context "when a name is given" do
+        it "names the player as that name" do
+            expect(Player.new("Mark").name).to eql("Mark")
+        end
+    end
+end

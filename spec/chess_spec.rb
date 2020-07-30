@@ -38,6 +38,37 @@ describe "Board" do
             expect(board.squares[4][2].piece).to eql("King")
         end
     end
+
+    describe "#show" do
+        context "when the board is empty" do
+            it "shows an empty board" do
+                allow(square).to receive(:to_s).and_return("⛶")
+                expect(board.show).to eql(" ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
+                                          " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
+                                          " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
+                                          " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
+                                          " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
+                                          " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
+                                          " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
+                                          " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n")
+            end
+        end
+        context "when a piece is on the board" do
+            it "shows the piece on the board" do
+                board.squares[0][0] = king
+                allow(square).to receive(:to_s).and_return("⛶")
+                allow(king).to receive(:to_s).and_return("♚")
+                expect(board.show).to eql(" ♚  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
+                                          " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
+                                          " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
+                                          " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
+                                          " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
+                                          " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
+                                          " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
+                                          " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n")
+            end
+        end
+    end
 end
 
 describe "Square" do

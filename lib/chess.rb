@@ -19,6 +19,20 @@ class Board
         @squares[array_position[0]][array_position[1]]
     end
 
+    def show
+        board_string = ""
+
+        @squares.each do |row|
+            row.each_with_index do |piece, index|
+                board_string += "\s#{piece}\s"
+                board_string += "\n" if index == 7
+            end
+        end
+
+        print board_string
+        board_string
+    end
+
 
     private
 
@@ -51,6 +65,10 @@ class Square
     def occupied?
         self.piece ? true : false
     end
+
+    def to_s
+        piece ? self.piece : "\u26f6"
+    end
 end
 
 class Piece
@@ -61,6 +79,10 @@ class Piece
             @name = "Pawn"
             @color = color
         end
+
+        def to_s
+            color == "Black" ? "\u265f" : "\u2659"
+        end
     end
 
     class Bishop
@@ -69,6 +91,10 @@ class Piece
         def initialize(color="Black")
             @name = "Bishop"
             @color = color
+        end
+
+        def to_s
+            color == "Black" ? "\u265d" : "\u2657"
         end
     end
 
@@ -79,6 +105,10 @@ class Piece
             @name = "Knight"
             @color = color
         end
+
+        def to_s
+            color == "Black" ? "\u265e" : "\u2658"
+        end
     end
 
     class Rook
@@ -87,6 +117,10 @@ class Piece
         def initialize(color="Black")
             @name = "Rook"
             @color = color
+        end
+
+        def to_s
+            color == "Black" ? "\u265c" : "\u2656"
         end
     end
 
@@ -97,6 +131,10 @@ class Piece
             @name = "Queen"
             @color = color
         end
+
+        def to_s
+            color == "Black" ? "\u265b" : "\u2655"
+        end
     end
 
     class King
@@ -105,6 +143,10 @@ class Piece
         def initialize(color="Black")
             @name = "King"
             @color = color
+        end
+
+        def to_s
+            color == "Black" ? "\u265a" : "\u2654"
         end
     end
 end

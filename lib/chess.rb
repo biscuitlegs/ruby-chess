@@ -6,7 +6,7 @@ class Board
     end
 
     def place_piece(piece, position)
-        get_square(position).piece = piece
+        get_square(position).piece = Object.const_get("Piece::#{piece}").new
     end
 
     def get_square(position)
@@ -15,6 +15,7 @@ class Board
             position = gets.chomp
         end
 
+        position.downcase!
         array_position = human_to_array_position(position)
         @squares[array_position[0]][array_position[1]]
     end

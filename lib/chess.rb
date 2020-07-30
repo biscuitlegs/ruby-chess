@@ -6,6 +6,12 @@ class Board
     end
 
     def place_piece(piece, position)
+        until valid_piece?(piece)
+            puts invalid_piece_message
+            piece = gets.chomp
+        end
+
+        piece.capitalize!
         get_square(position).piece = Object.const_get("Piece::#{piece}").new
     end
 
@@ -36,6 +42,14 @@ class Board
 
 
     private
+
+    def valid_piece?(piece)
+        piece.capitalize =~ /(Pawn|Bishop|Knight|Rook|Queen|King)/ ? true : false
+    end
+
+    def invalid_piece_message
+        "That is not a valid piece. Please choose a valid piece:\n"
+    end
 
     def human_to_array_position(position)
         [letter_to_number(position[0]) - 1, position[1].to_i - 1].reverse

@@ -6,6 +6,11 @@ class Board
     end
 
     def get_square(position)
+        until valid_position?(position)
+            puts invalid_position_message
+            position = gets.chomp
+        end
+        
         array_position = human_to_array_position(position)
         @squares[array_position[0]][array_position[1]]
     end
@@ -21,6 +26,14 @@ class Board
         ("a".."h").each_with_index do |letter, index|
             return index + 1 if given_letter == letter
         end
+    end
+
+    def valid_position?(position)
+        position.downcase =~ /^[a-h][1-8]$/ ? true : false
+    end
+
+    def invalid_position_message
+        "That position doesn't exist. Please enter a valid position:\n"
     end
 end
 

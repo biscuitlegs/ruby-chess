@@ -4,6 +4,24 @@ class Board
     def initialize(square=nil)
         @squares = Array.new(8) { Array.new(8) { square ? square : Square.new } }
     end
+
+    def get_square(position)
+        array_position = human_to_array_position(position)
+        @squares[array_position[0]][array_position[1]]
+    end
+
+
+    private
+
+    def human_to_array_position(position)
+        [letter_to_number(position[0]) - 1, position[1].to_i - 1].reverse
+    end
+
+    def letter_to_number(given_letter)
+        ("a".."g").each_with_index do |letter, index|
+            return index + 1 if given_letter == letter
+        end
+    end
 end
 
 class Square

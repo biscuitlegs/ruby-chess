@@ -2,11 +2,30 @@ require_relative "../lib/chess.rb"
 
 describe "Board" do
     let (:square) { double("square") }
+    let (:king) { double("king") }
     let (:board) { Board.new(square) }
+    before { allow(board).to receive(:puts) }
 
     describe "#initialize" do
         it "creates an 8x8 board with 64 squares" do
             expect(board.squares).to eql(Array.new(8) { Array.new(8, square) })
+        end
+    end
+
+    describe "#get_square" do
+        before { board.squares[0][0] = king }
+
+        context "when given a valid postion" do
+            it "gets the square at that position" do
+                expect(board.get_square("a1")).to eql(king)
+            end
+        end
+        context "when given an invalid postion" do
+            it "prompts the user for a valid position" do
+                allow(board).to receive(:gets).and_return("a1")
+                expect(board).to receive(:gets)
+                expect(board.get_square("z9")).to eql(king)
+            end
         end
     end
 end

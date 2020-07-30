@@ -10,7 +10,7 @@ class Board
             puts invalid_position_message
             position = gets.chomp
         end
-        
+
         array_position = human_to_array_position(position)
         @squares[array_position[0]][array_position[1]]
     end

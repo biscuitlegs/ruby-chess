@@ -43,111 +43,125 @@ end
 
 describe "Piece" do
     describe "Pawn" do
-        it "starts with the correct name" do
-            expect(Piece::Pawn.new.name).to eql("Pawn")
-        end
-        context "when no color is given" do
-            it "starts as a black piece" do
-                expect(Piece::Pawn.new.color).to eql("Black")
+        describe "#initialize" do
+            it "starts with the correct name" do
+                expect(Piece::Pawn.new.name).to eql("Pawn")
             end
-        end
-        context "when a color is given" do
-            it "starts as that color piece" do
-                expect(Piece::Pawn.new("White").color).to eql("White")
+            context "when no color is given" do
+                it "starts as a black piece" do
+                    expect(Piece::Pawn.new.color).to eql("Black")
+                end
+            end
+            context "when a color is given" do
+                it "starts as that color piece" do
+                    expect(Piece::Pawn.new("White").color).to eql("White")
+                end
             end
         end
     end
 
     describe "Bishop" do
-        it "starts with the correct name" do
-            expect(Piece::Bishop.new.name).to eql("Bishop")
-        end
-        context "when no color is given" do
-            it "starts as a black piece" do
-                expect(Piece::Bishop.new.color).to eql("Black")
+        describe "#initialze" do
+            it "starts with the correct name" do
+                expect(Piece::Bishop.new.name).to eql("Bishop")
             end
-        end
-        context "when a color is given" do
-            it "starts as that color piece" do
-                expect(Piece::Bishop.new("White").color).to eql("White")
+            context "when no color is given" do
+                it "starts as a black piece" do
+                    expect(Piece::Bishop.new.color).to eql("Black")
+                end
+            end
+            context "when a color is given" do
+                it "starts as that color piece" do
+                    expect(Piece::Bishop.new("White").color).to eql("White")
+                end
             end
         end
     end
 
     describe "Knight" do
-        it "starts with the correct name" do
-            expect(Piece::Knight.new.name).to eql("Knight")
-        end
-        context "when no color is given" do
-            it "starts as a black piece" do
-                expect(Piece::Knight.new.color).to eql("Black")
+        describe "#initialize" do
+            it "starts with the correct name" do
+                expect(Piece::Knight.new.name).to eql("Knight")
             end
-        end
-        context "when a color is given" do
-            it "starts as that color piece" do
-                expect(Piece::Knight.new("White").color).to eql("White")
+            context "when no color is given" do
+                it "starts as a black piece" do
+                    expect(Piece::Knight.new.color).to eql("Black")
+                end
+            end
+            context "when a color is given" do
+                it "starts as that color piece" do
+                    expect(Piece::Knight.new("White").color).to eql("White")
+                end
             end
         end
     end
 
     describe "Rook" do
-        it "starts with the correct name" do
-            expect(Piece::Rook.new.name).to eql("Rook")
-        end
-        context "when no color is given" do
-            it "starts as a black piece" do
-                expect(Piece::Rook.new.color).to eql("Black")
+        describe "#initialize" do
+            it "starts with the correct name" do
+                expect(Piece::Rook.new.name).to eql("Rook")
             end
-        end
-        context "when a color is given" do
-            it "starts as that color piece" do
-                expect(Piece::Rook.new("White").color).to eql("White")
+            context "when no color is given" do
+                it "starts as a black piece" do
+                    expect(Piece::Rook.new.color).to eql("Black")
+                end
+            end
+            context "when a color is given" do
+                it "starts as that color piece" do
+                    expect(Piece::Rook.new("White").color).to eql("White")
+                end
             end
         end
     end
 
     describe "Queen" do
-        it "starts with the correct name" do
-            expect(Piece::Queen.new.name).to eql("Queen")
-        end
-        context "when no color is given" do
-            it "starts as a black piece" do
-                expect(Piece::Queen.new.color).to eql("Black")
+        describe "#initialize" do
+            it "starts with the correct name" do
+                expect(Piece::Queen.new.name).to eql("Queen")
             end
-        end
-        context "when a color is given" do
-            it "starts as that color piece" do
-                expect(Piece::Queen.new("White").color).to eql("White")
+            context "when no color is given" do
+                it "starts as a black piece" do
+                    expect(Piece::Queen.new.color).to eql("Black")
+                end
+            end
+            context "when a color is given" do
+                it "starts as that color piece" do
+                    expect(Piece::Queen.new("White").color).to eql("White")
+                end
             end
         end
     end
 
     describe "King" do
-        it "starts with the correct name" do
-            expect(Piece::King.new.name).to eql("King")
-        end
-        context "when no color is given" do
-            it "starts as a black piece" do
-                expect(Piece::King.new.color).to eql("Black")
+        describe "#initialize" do
+            it "starts with the correct name" do
+                expect(Piece::King.new.name).to eql("King")
             end
-        end
-        context "when a color is given" do
-            it "starts as that color piece" do
-                expect(Piece::King.new("White").color).to eql("White")
+            context "when no color is given" do
+                it "starts as a black piece" do
+                    expect(Piece::King.new.color).to eql("Black")
+                end
+            end
+            context "when a color is given" do
+                it "starts as that color piece" do
+                    expect(Piece::King.new("White").color).to eql("White")
+                end
             end
         end
     end
 end
 
 describe "Player" do
-    context "when no name is given" do
-        it "names the player as 'Player'" do
-            expect(Player.new.name).to eql("Player")
+    describe "#initialize" do
+        context "when no name is given" do
+            it "names the player as 'Player'" do
+                expect(Player.new.name).to eql("Player")
+            end
         end
-    end
-    context "when a name is given" do
-        it "names the player as that name" do
-            expect(Player.new("Mark").name).to eql("Mark")
+        context "when a name is given" do
+            it "names the player as that name" do
+                expect(Player.new("Mark").name).to eql("Mark")
+            end
         end
     end
 end

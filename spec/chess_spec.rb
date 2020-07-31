@@ -4,7 +4,11 @@ describe "Board" do
     let (:square) { double("square") }
     let (:king) { double("king") }
     let (:board) { Board.new(square) }
-    before { allow(board).to receive(:puts) }
+
+    before do
+        allow(board).to receive(:puts)
+        allow(board).to receive(:print)
+    end
 
     describe "#initialize" do
         it "creates an 8x8 board with 64 squares" do
@@ -67,6 +71,26 @@ describe "Board" do
                                           " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
                                           " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n")
             end
+        end
+    end
+
+    describe "#remove_piece" do
+        let (:board) { Board.new }
+
+        it "removes a piece from the board" do
+            board.squares[0][0].piece = king
+            board.remove_piece("A1")
+            expect(board.squares[0][0].piece).to eql(nil)
+        end
+    end
+
+    describe "#move_piece" do
+        let (:board) { Board.new }
+
+        it "moves a piece on the board" do
+            board.squares[0][0].piece = king
+            board.move_piece("a1", "h8")
+            expect(board.squares[7][7].piece).to eql(king)
         end
     end
 end

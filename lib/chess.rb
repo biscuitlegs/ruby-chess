@@ -5,6 +5,15 @@ class Board
         @squares = Array.new(8) { Array.new(8) { square ? square : Square.new } }
     end
 
+    def move_piece(start, finish)
+        get_square(finish).piece = get_square(start).piece
+        get_square(start).piece = nil
+    end
+
+    def remove_piece(position)
+        get_square(position).piece = nil
+    end
+
     def place_piece(piece, position)
         until valid_piece?(piece)
             puts invalid_piece_message

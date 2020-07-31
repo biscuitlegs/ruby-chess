@@ -82,7 +82,7 @@ class Square
     end
 
     def to_s
-        piece ? self.piece : "\u26f6"
+        piece ? self.piece.to_s : "\u26f6"
     end
 end
 

@@ -62,14 +62,14 @@ describe "Board" do
                 board.squares[0][0] = king
                 allow(square).to receive(:to_s).and_return("⛶")
                 allow(king).to receive(:to_s).and_return("♚")
-                expect(board.show).to eql(" ♚  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
+                expect(board.show).to eql(" ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
                                           " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
                                           " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
                                           " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
                                           " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
                                           " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
                                           " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
-                                          " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n")
+                                          " ♚  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n")
             end
         end
     end

@@ -38,7 +38,7 @@ class Board
     def show
         board_string = ""
 
-        @squares.each do |row|
+        @squares.reverse.each do |row|
             row.each_with_index do |piece, index|
                 board_string += "\s#{piece}\s"
                 board_string += "\n" if index == 7

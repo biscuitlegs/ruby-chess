@@ -129,7 +129,7 @@ class Board
 
     def letter_to_number(given_letter)
         ("a".."h").each_with_index do |letter, index|
-            return index + 1 if given_letter == letter
+            return index + 1 if given_letter.downcase == letter.downcase
         end
     end
 

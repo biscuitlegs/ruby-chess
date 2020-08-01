@@ -59,8 +59,51 @@ class Board
         end
     end
 
+    def get_position(target_square)
+        @squares.each_with_index do |row, row_index|
+            row.each_with_index do |square, square_index|
+                return [row_index, square_index] if square == target_square
+            end
+        end
+    end
+
 
     private
+
+    def get_horizontal_and_vertical_moves(human_position, squares=[])
+        array_position = human_to_array_position(human_position)
+        square = get_square(human_position)
+
+        #left
+        array_position[1].downto(0).each do |n|
+            next if array_position == [array_position[0], n]
+            break if get_square(array_to_human_position([array_position[0], n])).piece
+            squares << get_square(array_to_human_position([array_position[0], n]))
+        end
+
+        #right
+        (array_position[1]..7).each do |n|
+            next if array_position == [array_position[0], n]
+            break if get_square(array_to_human_position([array_position[0], n])).piece
+            squares << get_square(array_to_human_position([array_position[0], n]))
+        end
+
+        #up
+        (array_position[0]..7).each do |n|
+            next if array_position == [n, array_position[1]]
+            break if get_square(array_to_human_position([n, array_position[1]])).piece
+            squares << get_square(array_to_human_position([n, array_position[1]]))
+        end
+
+        #down
+        array_position[0].downto(0).each do |n|
+            next if array_position == [n, array_position[1]]
+            break if get_square(array_to_human_position([n, array_position[1]])).piece
+            squares << get_square(array_to_human_position([n, array_position[1]]))
+        end
+
+        squares
+    end
 
     def valid_piece?(piece)
         piece.capitalize =~ /(Pawn|Bishop|Knight|Rook|Queen|King)/ ? true : false
@@ -70,8 +113,18 @@ class Board
         "That is not a valid piece. Please choose a valid piece:\n"
     end
 
+    def array_to_human_position(position)
+        [number_to_letter(position[1]), position[0] + 1].join.capitalize
+    end
+
     def human_to_array_position(position)
         [letter_to_number(position[0]) - 1, position[1].to_i - 1].reverse
+    end
+
+    def number_to_letter(given_number)
+        ("a".."h").each_with_index do |letter, index|
+            return letter if given_number == index
+        end
     end
 
     def letter_to_number(given_letter)

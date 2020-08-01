@@ -93,6 +93,20 @@ describe "Board" do
             expect(board.squares[7][7].piece).to eql(king)
         end
     end
+
+    describe "#populate" do
+        let (:board) { Board.new }
+
+        it "sets up pieces in their starting positions" do
+            board.populate
+            pieces = ["Rook", "Knight", "Bishop", "Queen", "King", "Bishop", "Knight", "Rook"]
+
+            (0..7).each do |n|
+                expect(board.squares[0][n].piece.name).to eql(pieces[n])
+                expect(board.squares[7][n].piece.name).to eql(pieces[n])
+            end
+        end
+    end
 end
 
 describe "Square" do

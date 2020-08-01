@@ -49,6 +49,16 @@ class Board
         board_string
     end
 
+    def populate
+        pieces = ["Rook", "Knight", "Bishop", "Queen", "King", "Bishop", "Knight", "Rook"]
+
+        (0..7).each do |number|
+            @squares[0][number].piece = Object.const_get("Piece::#{pieces[number]}").new
+            @squares[7][number].piece = Object.const_get("Piece::#{pieces[number]}").new
+            @squares[7][number].piece.color = "White"
+        end
+    end
+
 
     private
 
@@ -97,7 +107,8 @@ end
 
 class Piece
     class Pawn
-        attr_reader :name, :color
+        attr_reader :name
+        attr_accessor :color
 
         def initialize(color="Black")
             @name = "Pawn"
@@ -110,7 +121,8 @@ class Piece
     end
 
     class Bishop
-        attr_reader :name, :color
+        attr_reader :name
+        attr_accessor :color
 
         def initialize(color="Black")
             @name = "Bishop"
@@ -123,7 +135,8 @@ class Piece
     end
 
     class Knight
-        attr_reader :name, :color
+        attr_reader :name
+        attr_accessor :color
 
         def initialize(color="Black")
             @name = "Knight"
@@ -136,7 +149,8 @@ class Piece
     end
 
     class Rook
-        attr_reader :name, :color
+        attr_reader :name
+        attr_accessor :color
 
         def initialize(color="Black")
             @name = "Rook"
@@ -149,7 +163,8 @@ class Piece
     end
 
     class Queen
-        attr_reader :name, :color
+        attr_reader :name
+        attr_accessor :color
 
         def initialize(color="Black")
             @name = "Queen"
@@ -162,7 +177,8 @@ class Piece
     end
 
     class King
-        attr_reader :name, :color
+        attr_reader :name
+        attr_accessor :color
 
         def initialize(color="Black")
             @name = "King"

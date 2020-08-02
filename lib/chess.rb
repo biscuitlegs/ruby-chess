@@ -70,6 +70,48 @@ class Board
 
     private
 
+    def get_diagonal_moves(human_position, squares=[])
+
+        #bottom-left
+        array_position = human_to_array_position(human_position)
+
+        until array_position[0] == 0 || array_position[1] == 0
+            array_position[0] -= 1
+            array_position[1] -= 1
+            squares << get_square(array_to_human_position(array_position))
+        end
+
+        #bottom-right
+        array_position = human_to_array_position(human_position)
+
+        until array_position[0] == 0 || array_position[1] == 7
+            array_position[0] -= 1
+            array_position[1] += 1
+            squares << get_square(array_to_human_position(array_position))
+        end
+
+        #top-left
+        array_position = human_to_array_position(human_position)
+
+        until array_position[0] == 7 || array_position[1] == 0
+            array_position[0] += 1
+            array_position[1] -= 1
+            squares << get_square(array_to_human_position(array_position))
+        end
+
+        #top-right
+        array_position = human_to_array_position(human_position)
+
+        until array_position[0] == 7 || array_position[1] == 7
+            array_position[0] += 1
+            array_position[1] += 1
+            squares << get_square(array_to_human_position(array_position))
+        end
+
+
+        squares
+    end
+
     def get_horizontal_moves(human_position, squares=[])
         array_position = human_to_array_position(human_position)
         square = get_square(human_position)

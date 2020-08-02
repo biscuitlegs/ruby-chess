@@ -94,11 +94,11 @@ describe "Board" do
         end
     end
 
-    describe "#populate" do
+    describe "#setup" do
         let (:board) { Board.new }
 
         it "sets up pieces in their starting positions" do
-            board.populate
+            board.setup
             pieces = ["Rook", "Knight", "Bishop", "Queen", "King", "Bishop", "Knight", "Rook"]
 
             (0..7).each do |n|

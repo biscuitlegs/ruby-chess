@@ -49,13 +49,14 @@ class Board
         board_string
     end
 
-    def populate
-        pieces = ["Rook", "Knight", "Bishop", "Queen", "King", "Bishop", "Knight", "Rook"]
+    def setup
+        backrow = ["Rook", "Knight", "Bishop", "Queen", "King", "Bishop", "Knight", "Rook"]
 
         (0..7).each do |number|
-            @squares[0][number].piece = Object.const_get("Piece::#{pieces[number]}").new
-            @squares[7][number].piece = Object.const_get("Piece::#{pieces[number]}").new
-            @squares[7][number].piece.color = "White"
+            @squares[0][number].piece = Object.const_get("Piece::#{backrow[number]}").new
+            @squares[1][number].piece = Piece::Pawn.new
+            @squares[7][number].piece = Object.const_get("Piece::#{backrow[number]}").new("White")
+            @squares[6][number].piece = Piece::Pawn.new("White")
         end
     end
 

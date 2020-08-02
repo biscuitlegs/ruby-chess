@@ -78,6 +78,7 @@ class Board
         until array_position[0] == 0 || array_position[1] == 0
             array_position[0] -= 1
             array_position[1] -= 1
+            break if get_square(array_to_human_position(array_position)).piece
             squares << get_square(array_to_human_position(array_position))
         end
 
@@ -87,6 +88,7 @@ class Board
         until array_position[0] == 0 || array_position[1] == 7
             array_position[0] -= 1
             array_position[1] += 1
+            break if get_square(array_to_human_position(array_position)).piece
             squares << get_square(array_to_human_position(array_position))
         end
 
@@ -96,6 +98,7 @@ class Board
         until array_position[0] == 7 || array_position[1] == 0
             array_position[0] += 1
             array_position[1] -= 1
+            break if get_square(array_to_human_position(array_position)).piece
             squares << get_square(array_to_human_position(array_position))
         end
 
@@ -105,6 +108,7 @@ class Board
         until array_position[0] == 7 || array_position[1] == 7
             array_position[0] += 1
             array_position[1] += 1
+            break if get_square(array_to_human_position(array_position)).piece
             squares << get_square(array_to_human_position(array_position))
         end
 

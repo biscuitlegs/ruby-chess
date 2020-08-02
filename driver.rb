@@ -4,7 +4,8 @@ board = Board.new
 #board.populate
 board.place_piece("Rook", "e5")
 board.place_piece("Pawn", "f6")
-board.place_piece("Queen", "g7")
-board.place_piece("Bishop", "h8")
+board.place_piece("Queen", "d6")
+board.place_piece("Bishop", "d4")
+board.place_piece("Knight", "f3")
 board.show
-p board.get_diagonal_moves("a1")
+p board.get_diagonal_moves("e5")

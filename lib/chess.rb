@@ -70,7 +70,7 @@ class Board
 
     private
 
-    def get_horizontal_and_vertical_moves(human_position, squares=[])
+    def get_horizontal_moves(human_position, squares=[])
         array_position = human_to_array_position(human_position)
         square = get_square(human_position)
 
@@ -88,6 +88,10 @@ class Board
             squares << get_square(array_to_human_position([array_position[0], n]))
         end
 
+        squares
+    end
+
+    def get_vertical_moves(human_position, squares=[])
         #up
         (array_position[0]..7).each do |n|
             next if array_position == [n, array_position[1]]

@@ -28,11 +28,18 @@ class Board
         until valid_position?(position)
             puts invalid_position_message
             position = gets.chomp
+
+            if position =~ /^\[\d\, \d\]$/
+                position = [position[1].to_i, position[4].to_i]
+            end
         end
 
-        position.downcase!
-        array_position = human_to_array_position(position)
-        @squares[array_position[0]][array_position[1]]
+        if position.is_a? String
+            position.downcase!
+            position = human_to_array_position(position)
+        end
+
+        @squares[position[0]][position[1]]
     end
 
     def show
@@ -69,7 +76,7 @@ class Board
     end
 
 
-    private
+    #private
 
     def get_diagonal_moves(human_position, squares=[])
 
@@ -185,7 +192,13 @@ class Board
     end
 
     def valid_position?(position)
-        position.downcase =~ /^[a-h][1-8]$/ ? true : false
+        if position.is_a? String
+            return false if !position.downcase.match(/^[a-h][1-8]$/)
+        else
+            position.each { |n| return false if n < 0 || n > 7 }
+        end
+
+        true
     end
 
     def invalid_position_message

@@ -78,6 +78,19 @@ class Board
 
     private
 
+    def get_knight_moves(human_position, squares=[])
+        array_position = human_to_array_position(human_position)
+
+        permutations = [1, 2, -1, -2].permutation(2).to_a.filter { |p| p[0].abs != p[1].abs }
+        permutations.each do |permutation|
+            y = array_position[0] + permutation[0]
+            x = array_position[1] + permutation[1]
+            squares << get_square([y, x]) if !get_square([y, x]).piece
+        end
+
+        squares
+    end
+
     def get_diagonal_moves(human_position, squares=[])
 
         [[0, 0, "-", "-"], [7, 7, "+", "+"], [7, 0, "+", "-"], [0, 7, "-", "+"]].each do |set|

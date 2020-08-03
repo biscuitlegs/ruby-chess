@@ -91,16 +91,23 @@ class Board
         squares
     end
 
-    def get_diagonal_moves(human_position, squares=[])
-
+    def get_diagonal_moves(human_position, limit=nil, squares=[])
         [[0, 0, "-", "-"], [7, 7, "+", "+"], [7, 0, "+", "-"], [0, 7, "-", "+"]].each do |set|
             array_position = human_to_array_position(human_position)
 
-            until array_position[0] == set[0] || array_position[1] == set[1]
-                array_position[0] = array_position[0].public_send(set[2], 1)
-                array_position[1] = array_position[1].public_send(set[3], 1)
-                break if get_square(array_position).piece
-                squares << get_square(array_position)
+            catch (:reached_limit) do
+                until array_position[0] == set[0] || array_position[1] == set[1]
+                    array_position[0] = array_position[0].public_send(set[2], 1)
+                    array_position[1] = array_position[1].public_send(set[3], 1)
+
+                    [0, 1].each do |n|
+                        throw :reached_limit if limit && human_to_array_position(human_position)[n] - (limit + 1) == array_position[n]
+                        throw :reached_limit if limit && human_to_array_position(human_position)[n] + (limit + 1) == array_position[n]
+                    end
+                    
+                    break if get_square(array_position).piece
+                    squares << get_square(array_position)
+                end
             end
         end
 
@@ -108,10 +115,10 @@ class Board
         squares
     end
 
-    def get_horizontal_moves(human_position, squares=[])
+    def get_horizontal_moves(human_position, limit=nil, squares=[])
         array_position = human_to_array_position(human_position)
 
-        [array_position[1].downto(0), array_position[1].upto(7)].each do |direction|
+        [array_position[1].downto(limit ? array_position[1] - limit : 0), array_position[1].upto(limit ? array_position[1] + limit : 7)].each do |direction|
             direction.each do |n|
             next if array_position == [array_position[0], n]
             break if get_square([array_position[0], n]).piece
@@ -123,10 +130,10 @@ class Board
         squares
     end
 
-    def get_vertical_moves(human_position, squares=[])
+    def get_vertical_moves(human_position, limit=nil, squares=[])
         array_position = human_to_array_position(human_position)
 
-        [array_position[0].upto(7), array_position[0].downto(0)].each do |direction|
+        [array_position[0].upto(limit ? array_position[0] + limit : 7), array_position[0].downto(limit ? array_position[0] - limit : 0)].each do |direction|
             direction.each do |n|
                 next if array_position == [n, array_position[1]]
                 break if get_square([n, array_position[1]]).piece

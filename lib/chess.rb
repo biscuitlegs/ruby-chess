@@ -91,8 +91,16 @@ class Board
         squares
     end
 
-    def get_diagonal_moves(human_position, limit=nil, squares=[])
-        [[0, 0, "-", "-"], [7, 7, "+", "+"], [7, 0, "+", "-"], [0, 7, "-", "+"]].each do |set|
+    def get_diagonal_moves(human_position, direction=nil, limit=nil, squares=[])
+        directions = [[0, 0, "-", "-"], [7, 7, "+", "+"], [7, 0, "+", "-"], [0, 7, "-", "+"]]
+
+        if direction == 8
+            directions = [directions[1], directions[2]]
+        elsif direction == 1
+            directions = [directions[0], directions[3]]
+        end
+
+        directions.each do |set|
             array_position = human_to_array_position(human_position)
 
             catch (:reached_limit) do
@@ -115,10 +123,18 @@ class Board
         squares
     end
 
-    def get_horizontal_moves(human_position, limit=nil, squares=[])
+    def get_horizontal_moves(human_position, direction=nil, limit=nil, squares=[])
         array_position = human_to_array_position(human_position)
 
-        [array_position[1].downto(limit ? array_position[1] - limit : 0), array_position[1].upto(limit ? array_position[1] + limit : 7)].each do |direction|
+        directions = [array_position[1].downto(limit ? array_position[1] - limit : 0), array_position[1].upto(limit ? array_position[1] + limit : 7)]
+
+        if direction.upcase == "A"
+            directions.pop
+        elsif direction.upcase == "H"
+            directions.shift
+        end
+
+        directions.each do |direction|
             direction.each do |n|
             next if array_position == [array_position[0], n]
             break if get_square([array_position[0], n]).piece
@@ -130,10 +146,18 @@ class Board
         squares
     end
 
-    def get_vertical_moves(human_position, limit=nil, squares=[])
+    def get_vertical_moves(human_position, direction=nil, limit=nil, squares=[])
         array_position = human_to_array_position(human_position)
 
-        [array_position[0].upto(limit ? array_position[0] + limit : 7), array_position[0].downto(limit ? array_position[0] - limit : 0)].each do |direction|
+        directions = [array_position[0].upto(limit ? array_position[0] + limit : 7).to_a, array_position[0].downto(limit ? array_position[0] - limit : 0).to_a]
+
+        if direction == 8
+            directions.pop
+        elsif direction == 1
+            directions.shift
+        end
+        
+        directions.each do |direction|
             direction.each do |n|
                 next if array_position == [n, array_position[1]]
                 break if get_square([n, array_position[1]]).piece

@@ -75,8 +75,64 @@ class Board
         end
     end
 
+    def get_moves(human_position, squares=[])
+        piece = get_square(human_position).piece
+        array_position = human_to_array_position(human_position)
+
+        if get_square(human_position).piece
+            case piece.name
+                when "Pawn"
+                    if piece.color == "Black"
+                        if array_position[0] == 1
+                            squares << get_vertical_moves(human_position, 2, 8)
+                        else
+                            squares << get_vertical_moves(human_position, 1, 8)
+                        end
+
+                        squares << get_diagonal_moves(human_position, 1, 8)
+                    else
+                        if array_position[0] == 6
+                            squares << get_vertical_moves(human_position, 2, 1)
+                        else
+                            squares << get_vertical_moves(human_position, 1, 1)
+                        end
+
+                        squares << get_diagonal_moves(human_position, 1, 1)
+                    end
+                    
+                when "Bishop"
+                    squares << get_diagonal_moves(human_position)
+
+                when "Knight"
+                    squares << get_knight_moves(human_position)
+
+                when "Rook"
+                    squares << get_horizontal_moves(human_position)
+                    squares << get_vertical_moves(human_position)
+
+                when "Queen"
+                    squares << get_horizontal_moves(human_position)
+                    squares << get_vertical_moves(human_position)
+                    squares << get_diagonal_moves(human_position)
+
+                when "King"
+                    squares << get_horizontal_moves(human_position, 1)
+                    squares << get_vertical_moves(human_position, 1)
+                    squares << get_diagonal_moves(human_position, 1)
+
+                else
+            end
+        else
+            return squares
+        end
+
+
+        squares.flatten
+    end
+
 
     private
+
 
     def get_knight_moves(human_position, squares=[])
         array_position = human_to_array_position(human_position)
@@ -91,7 +147,7 @@ class Board
         squares
     end
 
-    def get_diagonal_moves(human_position, direction=nil, limit=nil, squares=[])
+    def get_diagonal_moves(human_position, limit=nil, direction=nil, squares=[])
         directions = [[0, 0, "-", "-"], [7, 7, "+", "+"], [7, 0, "+", "-"], [0, 7, "-", "+"]]
 
         if direction == 8
@@ -123,14 +179,14 @@ class Board
         squares
     end
 
-    def get_horizontal_moves(human_position, direction=nil, limit=nil, squares=[])
+    def get_horizontal_moves(human_position, limit=nil, direction=nil, squares=[])
         array_position = human_to_array_position(human_position)
 
         directions = [array_position[1].downto(limit ? array_position[1] - limit : 0), array_position[1].upto(limit ? array_position[1] + limit : 7)]
 
-        if direction.upcase == "A"
+        if direction && direction.upcase == "A"
             directions.pop
-        elsif direction.upcase == "H"
+        elsif direction && direction.upcase == "H"
             directions.shift
         end
 
@@ -146,7 +202,7 @@ class Board
         squares
     end
 
-    def get_vertical_moves(human_position, direction=nil, limit=nil, squares=[])
+    def get_vertical_moves(human_position, limit=nil, direction=nil, squares=[])
         array_position = human_to_array_position(human_position)
 
         directions = [array_position[0].upto(limit ? array_position[0] + limit : 7).to_a, array_position[0].downto(limit ? array_position[0] - limit : 0).to_a]

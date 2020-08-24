@@ -107,6 +107,160 @@ describe "Board" do
             end
         end
     end
+
+    describe "#get_moves" do
+        let (:board) { Board.new }
+        let (:dummy_piece) { double("dummy_piece") }
+
+        context "when the square has no piece" do
+            it "returns an empty array" do
+                expect(board.get_moves("c5")).to eql([])
+            end
+        end
+
+        context "when the piece is a pawn" do
+            context "when the piece moves for the first time" do
+                context "when the piece is black" do
+                    it "can move up to two squares forward" do
+                        board.squares[1][0].piece = Piece::Pawn.new
+                        
+                        expect(board.get_moves("a2")).to include(
+                            board.squares[2][0],
+                            board.squares[3][0]
+                        )
+                        
+                    end
+                end
+                context "when the piece is white" do
+                    it "can move up to two squares forward" do
+                        board.squares[6][0].piece = Piece::Pawn.new("White")
+                        
+                        expect(board.get_moves("a7")).to include(
+                            board.squares[5][0],
+                            board.squares[4][0]
+                        )
+                        
+                    end
+                end
+            end
+
+            context "when the piece has already moved" do
+                it "can only move forward one square" do
+                    board.squares[3][1].piece = Piece::Pawn.new
+
+                    expect(board.get_moves("b4").length).to eql(3)
+                    expect(board.get_moves("b4")).to include(
+                        board.squares[4][1],
+                        board.squares[4][0],
+                        board.squares[4][2],
+                    )
+                end
+            end
+        end
+
+        context "when the piece is a bishop" do
+            it "gets all available bishop moves" do
+                board.squares[3][3].piece = Piece::Bishop.new
+                board.squares[4][2].piece = dummy_piece
+                board.squares[1][5].piece = dummy_piece
+                board.squares[1][1].piece = dummy_piece
+                
+                expect(board.get_moves("d4").length).to eql(6)
+                expect(board.get_moves("d4")).to include(
+                    board.squares[2][2], 
+                    board.squares[2][4], 
+                    board.squares[4][4],
+                    board.squares[5][5],
+                    board.squares[6][6],
+                    board.squares[7][7],
+                )
+            end
+        end
+
+        context "when the piece is a knight" do
+            it "gets all available knight moves" do
+                board.squares[3][3].piece = Piece::Knight.new
+                board.squares[1][2].piece = dummy_piece
+                board.squares[1][4].piece = dummy_piece
+                board.squares[4][1].piece = dummy_piece
+                board.squares[5][2].piece = dummy_piece
+                board.squares[2][5].piece = dummy_piece
+                board.squares[4][5].piece = dummy_piece
+
+                expect(board.get_moves("d4").length).to eql(2)
+                expect(board.get_moves("d4")).to include(
+                    board.squares[5][4],
+                    board.squares[2][1]
+                )
+            end
+        end
+
+        context "when the piece is a rook" do
+            it "gets all available rook moves" do
+                board.squares[3][3].piece = Piece::Rook.new
+                board.squares[3][4].piece = dummy_piece
+                board.squares[7][3].piece = dummy_piece
+                board.squares[3][0].piece = dummy_piece
+
+                expect(board.get_moves("d4").length).to eql(8)
+                expect(board.get_moves("d4")).to include(
+                    board.squares[3][1],
+                    board.squares[3][2],
+                    board.squares[0][3],
+                    board.squares[1][3],
+                    board.squares[2][3],
+                    board.squares[4][3],
+                    board.squares[5][3],
+                    board.squares[6][3],
+                )
+            end
+        end
+
+        context "when the piece is a queen" do
+            it "gets all available queen moves" do
+                board.squares[3][3].piece = Piece::Queen.new
+                board.squares[4][3].piece = dummy_piece
+                board.squares[3][5].piece = dummy_piece
+                board.squares[1][1].piece = dummy_piece
+                board.squares[5][1].piece = dummy_piece
+                board.squares[3][1].piece = dummy_piece
+                board.squares[1][5].piece = dummy_piece
+                board.squares[3][1].piece = dummy_piece
+                board.squares[5][5].piece = dummy_piece
+
+                expect(board.get_moves("d4").length).to eql(9)
+                expect(board.get_moves("d4")).to include(
+                    board.squares[0][3],
+                    board.squares[1][3],
+                    board.squares[2][3],
+                    board.squares[2][2],
+                    board.squares[3][2],
+                    board.squares[4][2],
+                    board.squares[4][4],
+                    board.squares[3][4],
+                    board.squares[2][4],
+                )
+            end
+        end
+
+        context "when the piece is a king" do
+            it "gets all available king moves" do
+                board.squares[3][3].piece = Piece::King.new
+                board.squares[3][2].piece = Piece::King.new
+                board.squares[4][4].piece = Piece::King.new
+
+                expect(board.get_moves("d4").length).to eql(6)
+                expect(board.get_moves("d4")).to include(
+                    board.squares[2][3],
+                    board.squares[2][2],
+                    board.squares[4][2],
+                    board.squares[2][3],
+                    board.squares[3][4],
+                    board.squares[2][4],
+                )
+            end
+        end
+    end
 end
 
 describe "Square" do

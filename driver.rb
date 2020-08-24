@@ -8,4 +8,4 @@ board.place_piece("Knight", "c5")
 
 
 board.show
-p board.get_moves("d4")
+

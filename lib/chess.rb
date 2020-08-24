@@ -54,10 +54,10 @@ class Board
             end
         end
 
+        board_string += "\s"
+        ("A".."H").to_a.each { |letter| board_string += "\s#{letter}\s" }
+
         print board_string
-        print "\s"
-        
-        ("A".."H").to_a.each { |letter| print "\s#{letter}\s" }
         print "\n"
 
         board_string

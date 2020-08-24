@@ -47,14 +47,16 @@ describe "Board" do
         context "when the board is empty" do
             it "shows an empty board" do
                 allow(square).to receive(:to_s).and_return("⛶")
-                expect(board.show).to eql(" ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
-                                          " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
-                                          " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
-                                          " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
-                                          " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
-                                          " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
-                                          " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
-                                          " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n")
+                expect(board.show).to eql("8 ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
+                                          "7 ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
+                                          "6 ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
+                                          "5 ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
+                                          "4 ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
+                                          "3 ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
+                                          "2 ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
+                                          "1 ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
+                                          "  A  B  C  D  E  F  G  H "
+                                        )
             end
         end
         context "when a piece is on the board" do
@@ -62,14 +64,16 @@ describe "Board" do
                 board.squares[0][0] = king
                 allow(square).to receive(:to_s).and_return("⛶")
                 allow(king).to receive(:to_s).and_return("♚")
-                expect(board.show).to eql(" ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
-                                          " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
-                                          " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
-                                          " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
-                                          " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
-                                          " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
-                                          " ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
-                                          " ♚  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n")
+                expect(board.show).to eql("8 ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
+                                          "7 ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
+                                          "6 ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
+                                          "5 ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
+                                          "4 ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
+                                          "3 ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
+                                          "2 ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
+                                          "1 ♚  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶  ⛶ \n" +
+                                          "  A  B  C  D  E  F  G  H "
+                                        )
             end
         end
     end

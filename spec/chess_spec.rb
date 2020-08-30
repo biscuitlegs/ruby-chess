@@ -114,7 +114,13 @@ describe "Board" do
 
     describe "#get_moves" do
         let (:board) { Board.new }
-        let (:dummy_piece) { double("dummy_piece") }
+        let (:black_piece) { double("black_piece") }
+        let (:white_piece) { double("white_piece") }
+
+        before do
+            allow(black_piece).to receive(:color).and_return("Black")
+            allow(white_piece).to receive(:color).and_return("White")
+        end
 
         context "when the square has no piece" do
             it "returns an empty array" do
@@ -152,11 +158,43 @@ describe "Board" do
                 it "can only move forward one square" do
                     board.squares[3][1].piece = Piece::Pawn.new
 
-                    expect(board.get_moves("b4").length).to eql(3)
+                    expect(board.get_moves("b4").length).to eql(1)
+                    expect(board.get_moves("b4")).to include(
+                        board.squares[4][1]
+                    )
+                end
+            end
+
+            context "when the piece is blocked" do
+                it "cannot move forward" do
+                    board.squares[3][1].piece = Piece::Pawn.new
+                    board.squares[4][1].piece = white_piece
+
+                    expect(board.get_moves("b4").length).to eql(0)
+                end
+            end
+
+            context "when there is no adjacent diagonal enemy piece" do
+                it "cannot move diagonally" do
+                    board.squares[3][1].piece = Piece::Pawn.new
+
+                    expect(board.get_moves("b4").length).to eql(1)
+                    expect(board.get_moves("b4")).to include(
+                        board.squares[4][1]
+                    )
+                end
+            end
+
+            context "when there is an adjacent diagonal enemy piece" do
+                it "can move to that square" do
+                    board.squares[3][1].piece = Piece::Pawn.new
+                    board.squares[4][2].piece = white_piece
+                    board.squares[4][0].piece = black_piece
+
+                    expect(board.get_moves("b4").length).to eql(2)
                     expect(board.get_moves("b4")).to include(
                         board.squares[4][1],
-                        board.squares[4][0],
-                        board.squares[4][2],
+                        board.squares[4][2]
                     )
                 end
             end
@@ -165,11 +203,11 @@ describe "Board" do
         context "when the piece is a bishop" do
             it "gets all available bishop moves" do
                 board.squares[3][3].piece = Piece::Bishop.new
-                board.squares[4][2].piece = dummy_piece
-                board.squares[1][5].piece = dummy_piece
-                board.squares[1][1].piece = dummy_piece
+                board.squares[4][2].piece = white_piece
+                board.squares[1][5].piece = black_piece
+                board.squares[1][1].piece = black_piece
                 
-                expect(board.get_moves("d4").length).to eql(6)
+                expect(board.get_moves("d4").length).to eql(7)
                 expect(board.get_moves("d4")).to include(
                     board.squares[2][2], 
                     board.squares[2][4], 
@@ -177,6 +215,7 @@ describe "Board" do
                     board.squares[5][5],
                     board.squares[6][6],
                     board.squares[7][7],
+                    board.squares[4][2]
                 )
             end
         end
@@ -184,65 +223,62 @@ describe "Board" do
         context "when the piece is a knight" do
             it "gets all available knight moves" do
                 board.squares[3][3].piece = Piece::Knight.new
-                board.squares[1][2].piece = dummy_piece
-                board.squares[1][4].piece = dummy_piece
-                board.squares[4][1].piece = dummy_piece
-                board.squares[5][2].piece = dummy_piece
-                board.squares[2][5].piece = dummy_piece
-                board.squares[4][5].piece = dummy_piece
+                board.squares[1][2].piece = black_piece
+                board.squares[1][4].piece = black_piece
+                board.squares[4][1].piece = black_piece
+                board.squares[5][2].piece = white_piece
+                board.squares[2][5].piece = black_piece
+                board.squares[4][5].piece = black_piece
 
-                expect(board.get_moves("d4").length).to eql(2)
+                expect(board.get_moves("d4").length).to eql(3)
                 expect(board.get_moves("d4")).to include(
                     board.squares[5][4],
-                    board.squares[2][1]
+                    board.squares[2][1],
+                    board.squares[5][2]
                 )
             end
         end
 
         context "when the piece is a rook" do
             it "gets all available rook moves" do
-                board.squares[3][3].piece = Piece::Rook.new
-                board.squares[3][4].piece = dummy_piece
-                board.squares[7][3].piece = dummy_piece
-                board.squares[3][0].piece = dummy_piece
+                    board.squares[3][3].piece = Piece::Rook.new("Black")
+                    board.squares[5][3].piece = white_piece
+                    board.squares[3][1].piece = white_piece
+                    board.squares[2][3].piece = black_piece
+                    board.squares[3][4].piece = black_piece
 
-                expect(board.get_moves("d4").length).to eql(8)
-                expect(board.get_moves("d4")).to include(
-                    board.squares[3][1],
-                    board.squares[3][2],
-                    board.squares[0][3],
-                    board.squares[1][3],
-                    board.squares[2][3],
-                    board.squares[4][3],
-                    board.squares[5][3],
-                    board.squares[6][3],
-                )
+                    expect(board.get_moves("d4").length).to eql(4)
+                    expect(board.get_moves("d4")).to include(
+                        board.squares[3][2],
+                        board.squares[3][1],
+                        board.squares[4][3],
+                        board.squares[5][3],
+                    )
             end
         end
 
         context "when the piece is a queen" do
             it "gets all available queen moves" do
-                board.squares[3][3].piece = Piece::Queen.new
-                board.squares[4][3].piece = dummy_piece
-                board.squares[3][5].piece = dummy_piece
-                board.squares[1][1].piece = dummy_piece
-                board.squares[5][1].piece = dummy_piece
-                board.squares[3][1].piece = dummy_piece
-                board.squares[1][5].piece = dummy_piece
-                board.squares[3][1].piece = dummy_piece
-                board.squares[5][5].piece = dummy_piece
+                board.squares[3][3].piece = Piece::Queen.new("Black")
+                board.squares[4][3].piece = white_piece
+                board.squares[3][1].piece = white_piece
+                board.squares[1][3].piece = black_piece
+                board.squares[3][4].piece = black_piece
+                board.squares[4][4].piece = black_piece
+                board.squares[2][4].piece = white_piece
+                board.squares[1][1].piece = white_piece
+                board.squares[5][1].piece = black_piece
 
-                expect(board.get_moves("d4").length).to eql(9)
+                expect(board.get_moves("d4").length).to eql(8)
                 expect(board.get_moves("d4")).to include(
-                    board.squares[0][3],
-                    board.squares[1][3],
+                    board.squares[4][3],
+                    board.squares[2][4],
                     board.squares[2][3],
                     board.squares[2][2],
+                    board.squares[1][1],
                     board.squares[3][2],
-                    board.squares[4][2],
-                    board.squares[4][4],
-                    board.squares[3][4],
-                    board.squares[2][4],
+                    board.squares[3][1],
+                    board.squares[4][2]
                 )
             end
         end
@@ -250,17 +286,19 @@ describe "Board" do
         context "when the piece is a king" do
             it "gets all available king moves" do
                 board.squares[3][3].piece = Piece::King.new
-                board.squares[3][2].piece = Piece::King.new
-                board.squares[4][4].piece = Piece::King.new
+                board.squares[3][2].piece = white_piece
+                board.squares[4][4].piece = white_piece
+                board.squares[3][4].piece = black_piece
+                board.squares[2][3].piece = black_piece
 
                 expect(board.get_moves("d4").length).to eql(6)
                 expect(board.get_moves("d4")).to include(
-                    board.squares[2][3],
-                    board.squares[2][2],
+                    board.squares[4][3],
                     board.squares[4][2],
-                    board.squares[2][3],
-                    board.squares[3][4],
+                    board.squares[2][2],
                     board.squares[2][4],
+                    board.squares[3][2],
+                    board.squares[4][4],
                 )
             end
         end

@@ -91,20 +91,20 @@ class Board
                 when "Pawn"
                     if piece.color == "Black"
                         if array_position[0] == 1
-                            squares << get_vertical_moves(human_position, 2, 8)
+                            squares << get_vertical_moves(human_position, 2, 8).select { |square| !square.piece }
                         else
-                            squares << get_vertical_moves(human_position, 1, 8)
+                            squares << get_vertical_moves(human_position, 1, 8).select { |square| !square.piece }
                         end
 
-                        squares << get_diagonal_moves(human_position, 1, 8)
+                        squares << get_diagonal_moves(human_position, 1, 8).select { |square| square.piece && square.piece.color == "White" }
                     else
                         if array_position[0] == 6
-                            squares << get_vertical_moves(human_position, 2, 1)
+                            squares << get_vertical_moves(human_position, 2, 1).select { |square| !square.piece }
                         else
-                            squares << get_vertical_moves(human_position, 1, 1)
+                            squares << get_vertical_moves(human_position, 1, 1).select { |square| !square.piece }
                         end
 
-                        squares << get_diagonal_moves(human_position, 1, 1)
+                        squares << get_diagonal_moves(human_position, 1, 1).select { |square| square.piece && square.piece.color == "Black" }
                     end
                     
                 when "Bishop"
@@ -148,7 +148,7 @@ class Board
         permutations.each do |permutation|
             y = array_position[0] + permutation[0]
             x = array_position[1] + permutation[1]
-            squares << get_square([y, x]) if !get_square([y, x]).piece
+            squares << get_square([y, x]) if !get_square([y, x]).piece || get_square([y, x]).piece.color != get_square(human_position).piece.color
         end
 
         squares
@@ -176,7 +176,13 @@ class Board
                         throw :reached_limit if limit && human_to_array_position(human_position)[n] + (limit + 1) == array_position[n]
                     end
                     
-                    break if get_square(array_position).piece
+                    if get_square(array_position).piece && get_square(array_position).piece.color == get_square(human_position).piece.color
+                        break
+                    elsif get_square(array_position).piece && get_square(array_position).piece.color != get_square(human_position).piece.color
+                        squares << get_square(array_position)
+                        break
+                    end
+
                     squares << get_square(array_position)
                 end
             end
@@ -199,9 +205,16 @@ class Board
 
         directions.each do |direction|
             direction.each do |n|
-            next if array_position == [array_position[0], n]
-            break if get_square([array_position[0], n]).piece
-            squares << get_square([array_position[0], n])
+                next if array_position == [array_position[0], n]
+
+                if get_square([array_position[0], n]).piece && get_square([array_position[0], n]).piece.color == get_square(human_position).piece.color
+                    break
+                elsif get_square([array_position[0], n]).piece && get_square([array_position[0], n]).piece.color != get_square(human_position).piece.color
+                    squares << get_square([array_position[0], n])
+                    break
+                end
+
+                squares << get_square([array_position[0], n])
             end
         end
         
@@ -223,7 +236,14 @@ class Board
         directions.each do |direction|
             direction.each do |n|
                 next if array_position == [n, array_position[1]]
-                break if get_square([n, array_position[1]]).piece
+
+                if get_square([n, array_position[1]]).piece && get_square([n, array_position[1]]).piece.color == get_square(human_position).piece.color
+                    break
+                elsif get_square([n, array_position[1]]).piece && get_square([n, array_position[1]]).piece.color != get_square(human_position).piece.color
+                    squares << get_square([n, array_position[1]])
+                    break
+                end
+
                 squares << get_square([n, array_position[1]])
             end
         end

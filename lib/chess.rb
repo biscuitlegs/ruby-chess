@@ -148,6 +148,9 @@ class Board
         permutations.each do |permutation|
             y = array_position[0] + permutation[0]
             x = array_position[1] + permutation[1]
+
+            next if x < 0 || x > 7 || y < 0 || y > 7
+
             squares << get_square([y, x]) if !get_square([y, x]).piece || get_square([y, x]).piece.color != get_square(human_position).piece.color
         end
 

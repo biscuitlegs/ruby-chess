@@ -137,6 +137,55 @@ class Board
         squares.flatten
     end
 
+    def in_check?(position)
+        king = get_square(position).piece
+        enemy_squares = []
+
+        @squares.each do |row|
+            row.each do |square|
+                enemy_squares << square if square.piece && square.piece.color != king.color
+            end
+        end
+ 
+
+        enemy_squares.each do |square|
+            array_position = get_position(square)
+            human_position = array_to_human_position(array_position)
+           
+            if get_moves(human_position).include?(get_square(position))
+                return true
+            end
+        end
+
+        false
+    end
+
+    def checkmated?(position)
+        if in_check?(position)
+            king_moves = get_moves(position)
+
+            king_moves.each do |square|
+                original_piece = square.piece
+                array_position = get_position(square)
+                human_position = array_to_human_position(array_position)
+                move_piece(position, human_position)
+        
+                if !in_check?(human_position)
+                    move_piece(human_position, position)
+                    square.piece = original_piece
+                    return false
+                end
+
+                move_piece(human_position, position)
+                square.piece = original_piece
+            end
+        else
+            return false
+        end
+
+        true
+    end
+
 
     private
 

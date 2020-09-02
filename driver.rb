@@ -3,7 +3,8 @@ require_relative "lib/chess.rb"
 board = Board.new
 board.setup
 
-board.place_piece("King", "h5")
+board.place_piece("King", "a4")
+board.place_piece("King", "a4")
 #board.get_square("h5").piece.color = "White"
 #board.place_piece("Rook", "h6")
 #board.place_piece("Rook", "h7")

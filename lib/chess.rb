@@ -140,7 +140,6 @@ class Board
 
     private
 
-
     def get_knight_moves(human_position, squares=[])
         array_position = human_to_array_position(human_position)
 
@@ -198,7 +197,7 @@ class Board
     def get_horizontal_moves(human_position, limit=nil, direction=nil, squares=[])
         array_position = human_to_array_position(human_position)
 
-        directions = [array_position[1].downto(limit ? array_position[1] - limit : 0), array_position[1].upto(limit ? array_position[1] + limit : 7)]
+        directions = [array_position[1].downto(limit && array_position[1] - limit >= 0 ? array_position[1] - limit : 0), array_position[1].upto(limit && array_position[1] + limit <= 7 ? array_position[1] + limit : 7)]
 
         if direction && direction.upcase == "A"
             directions.pop
@@ -228,7 +227,7 @@ class Board
     def get_vertical_moves(human_position, limit=nil, direction=nil, squares=[])
         array_position = human_to_array_position(human_position)
 
-        directions = [array_position[0].upto(limit ? array_position[0] + limit : 7).to_a, array_position[0].downto(limit ? array_position[0] - limit : 0).to_a]
+        directions = [array_position[0].upto(limit && array_position[0] + limit <= 7 ? array_position[0] + limit : 7).to_a, array_position[0].downto(limit && array_position[0] - limit >= 0 ? array_position[0] - limit : 0).to_a]
 
         if direction == 8
             directions.pop

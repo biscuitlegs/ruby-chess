@@ -346,6 +346,52 @@ describe "Board" do
             end
         end
     end
+
+    describe "#valid_move?" do
+        let (:board) { Board.new }
+
+        context "when given a valid move" do
+            it "returns true" do
+                board.squares[1][0].piece = Piece::Pawn.new
+                board.squares[1][5].piece = Piece::King.new
+
+                expect(board.valid_move?("a2", "a3")).to eql(true)
+            end
+        end
+
+        context "when given an invalid move" do
+            context "when there is no piece on the start square" do
+                it "returns false" do
+                    expect(board.valid_move?("a1", "a2")).to eql(false)
+                end
+            end
+            context "when the destination square has an ally piece" do
+                it "returns false" do
+                    board.squares[0][0].piece = Piece::Pawn.new
+                    board.squares[1][0].piece = Piece::Pawn.new
+
+                    expect(board.valid_move?("a1", "a2")).to eql(false)
+                end
+            end
+            context "when the piece cannot legally move from start to finish" do
+                it "returns false" do
+                    board.squares[0][0].piece = Piece::Rook.new
+                    board.squares[5][0].piece = Piece::King.new
+
+                    expect(board.valid_move?("a1", "h8")).to eql(false)
+                end
+            end
+            context "when the move checks the player's own king" do
+                it "returns false" do
+                    board.squares[3][3].piece = Piece::King.new
+                    board.squares[4][3].piece = Piece::Rook.new
+                    board.squares[5][3].piece = Piece::Queen.new("White")
+
+                    expect(board.valid_move?("d5", "c5")).to eql(false)
+                end
+            end
+        end
+    end
 end
 
 describe "Square" do

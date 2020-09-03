@@ -189,6 +189,14 @@ class Board
         true
     end
 
+    def valid_move?(start, finish)
+        if !get_square(start).piece || (get_square(finish).piece && get_square(start).piece.color == get_square(finish).piece.color) || checks_own_king?(start, finish) || !get_moves(start).include?(get_square(finish))
+            return false
+        end
+        
+        true
+    end
+
 
     private
 

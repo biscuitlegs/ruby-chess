@@ -304,25 +304,6 @@ describe "Board" do
         end
     end
 
-    describe "#in_check?" do
-        let (:board) { Board.new }
-        
-        context "when the king is not in check" do
-            it "returns false" do
-                board.squares[3][3].piece = Piece::King.new
-                expect(board.in_check?("d4")).to eql(false)
-            end
-        end
-
-        context "when the king is in check" do
-            it "returns true" do
-                board.squares[3][0].piece = Piece::King.new
-                board.squares[3][2].piece = Piece::Rook.new("White")
-                expect(board.in_check?("a4")).to eql(true)
-            end
-        end
-    end
-
     describe "#checkmated?" do
         let (:board) { Board.new }
         
@@ -340,6 +321,28 @@ describe "Board" do
                 board.squares[3][1].piece = Piece::Queen.new("White")
                 board.squares[3][2].piece = Piece::Rook.new("White")
                 expect(board.checkmated?("a4")).to eql(true)
+            end
+        end
+    end
+
+    describe "#stalemated?" do
+        let (:board) { Board.new }
+
+        context "when the king is stalemated" do
+            it "returns true" do
+                board.squares[7][6].piece = Piece::King.new
+                board.squares[5][5].piece = Piece::Queen.new("White")
+                board.squares[5][7].piece = Piece::Rook.new("White")
+
+                expect(board.stalemated?("g8")).to eql(true)
+            end
+        end
+        context "when the king is not stalemated" do
+            it "returns false" do
+                board.squares[7][6].piece = Piece::King.new
+                board.squares[5][5].piece = Piece::Queen.new("White")
+
+                expect(board.stalemated?("g8")).to eql(false)
             end
         end
     end

@@ -137,29 +137,6 @@ class Board
         squares.flatten
     end
 
-    def in_check?(position)
-        king = get_square(position).piece
-        enemy_squares = []
-
-        @squares.each do |row|
-            row.each do |square|
-                enemy_squares << square if square.piece && square.piece.color != king.color
-            end
-        end
- 
-
-        enemy_squares.each do |square|
-            array_position = get_position(square)
-            human_position = array_to_human_position(array_position)
-           
-            if get_moves(human_position).include?(get_square(position))
-                return true
-            end
-        end
-
-        false
-    end
-
     def checkmated?(position)
         if in_check?(position)
             king_moves = get_moves(position)
@@ -186,8 +163,68 @@ class Board
         true
     end
 
+    def stalemated?(position)
+        if !in_check?(position)
+            king_moves = get_moves(position)
+
+            king_moves.each do |square|
+                original_piece = square.piece
+                array_position = get_position(square)
+                human_position = array_to_human_position(array_position)
+                move_piece(position, human_position)
+        
+                if !in_check?(human_position)
+                    move_piece(human_position, position)
+                    square.piece = original_piece
+                    return false
+                end
+
+                move_piece(human_position, position)
+                square.piece = original_piece
+            end
+        else
+            return false
+        end
+
+        true
+    end
+
 
     private
+
+    def in_check?(position)
+        king = get_square(position).piece
+
+        enemy_squares = @squares.flatten.select { |square| square.piece && square.piece.color != king.color }
+
+        enemy_squares.each do |square|
+            array_position = get_position(square)
+            human_position = array_to_human_position(array_position)
+           
+            return true if get_moves(human_position).include?(get_square(position))
+        end
+
+        false
+    end
+
+    def checks_own_king?(start, destination)
+        ally_king = @squares.flatten.select { |square| square.piece && square.piece.name == "King" && square.piece.color == get_square(start).piece.color }[0]
+
+        ally_king_position = array_to_human_position(get_position(ally_king))
+
+        destination_piece = get_square(destination).piece
+
+        move_piece(start, destination)
+        if in_check?(ally_king_position)
+            move_piece(destination, start)
+            get_square(destination).piece = destination_piece
+            return true
+        else
+            move_piece(destination, start)
+            get_square(destination).piece = destination_piece
+            return false
+        end
+    end
 
     def get_knight_moves(human_position, squares=[])
         array_position = human_to_array_position(human_position)

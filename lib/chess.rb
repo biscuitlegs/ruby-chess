@@ -165,31 +165,27 @@ class Board
 
     def stalemated?(position)
         if !in_check?(position)
-            king_moves = get_moves(position)
+            ally_squares = @squares.flatten.select { |square| square.piece && square.piece.color == get_square(position).piece.color }
 
-            if king_moves.empty?
-                squares = []
-                squares << get_horizontal_moves(position, true, 1)
-                squares << get_vertical_moves(position, true, 1)
-                squares << get_diagonal_moves(position, true, 1)
+            ally_squares.each do |square|
+                square_position = array_to_human_position(get_position(square))
+                square_moves = get_moves(square_position)
 
-                return false if squares.flatten.all? { |square| square.piece && square.piece.color == get_square(position).piece.color }
-            end
+                square_moves.each do |move|
+                    original_piece = move.piece
+                    array_position = get_position(move)
+                    human_position = array_to_human_position(array_position)
+                    move_piece(square_position, human_position)
+            
+                    if !in_check?(human_position)
+                        move_piece(human_position, square_position)
+                        move.piece = original_piece
+                        return false
+                    end
 
-            king_moves.each do |square|
-                original_piece = square.piece
-                array_position = get_position(square)
-                human_position = array_to_human_position(array_position)
-                move_piece(position, human_position)
-        
-                if !in_check?(human_position)
-                    move_piece(human_position, position)
-                    square.piece = original_piece
-                    return false
+                    move_piece(human_position, square_position)
+                    move.piece = original_piece
                 end
-
-                move_piece(human_position, position)
-                square.piece = original_piece
             end
         else
             return false
@@ -330,7 +326,7 @@ class Board
     end
 
 
-    private
+    #private
 
     def in_check?(position)
         king = get_square(position).piece
@@ -348,13 +344,21 @@ class Board
     end
 
     def checks_own_king?(start, destination)
+        
         ally_king = @squares.flatten.select { |square| square.piece && square.piece.name == "King" && square.piece.color == get_square(start).piece.color }[0]
-
         ally_king_position = array_to_human_position(get_position(ally_king))
 
         destination_piece = get_square(destination).piece
 
-        move_piece(start, destination)
+        
+        if get_square(start).piece.name == "King"
+            move_piece(start, destination)
+            ally_king = get_square(destination)
+            ally_king_position = destination
+        else
+            move_piece(start, destination)
+        end
+        
         if in_check?(ally_king_position)
             move_piece(destination, start)
             get_square(destination).piece = destination_piece
@@ -508,5 +512,82 @@ class Player
 
     def initialize(name="Player")
         @name = name
+    end
+end
+
+class Game
+    attr_accessor :board, :player_one, :player_two
+
+    def initialize(board=Board.new, player_one=Player.new("Black"), player_two=Player.new("White"))
+        @board = board
+        @board.setup
+        @player_one = player_one
+        @player_two = player_two
+    end
+
+    def play
+        play_round until gameover?
+        
+        @board.show
+
+        if get_winning_color == "Draw"
+            puts draw_message
+        else
+            winner = [@player_one, @player_two].select { |player| player.name == get_winning_color }[0]
+            puts winner_message(winner.name)
+        end
+    end
+
+    def play_round
+        [@player_one, @player_two].each do |player|
+            @board.show
+            puts "It's #{player.name}'s move.\n"
+            puts "To move a piece, type it's position and the intended destination, for example: 'd4 e5'."
+
+            move_choice = gets.chomp
+
+            until valid_move_format?(move_choice) && @board.valid_move?(move_choice.split[0], move_choice.split[1]) && player.name == @board.get_square(move_choice.split[0]).piece.color
+                puts "That move is not valid. Please try again:"
+                move_choice = gets.chomp
+            end
+
+            @board.move_piece(move_choice.split[0], move_choice.split[1])
+            break if gameover?
+        end
+    end
+
+    def gameover?
+        king_squares = @board.squares.flatten.select { |square| square.piece && square.piece.name == "King" }
+        king_squares.each do |square|
+            king_position = @board.array_to_human_position(@board.get_position(square))
+            return true if @board.checkmated?(king_position) || @board.stalemated?(king_position)
+        end
+
+        false
+    end
+
+    def get_winning_color
+        king_squares = @board.squares.flatten.select { |square| square.piece && square.piece.name == "King" }
+        king_squares.each do |square|
+            king_position = @board.array_to_human_position(@board.get_position(square))
+            return "Draw" if @board.stalemated?(king_position)
+            if @board.checkmated?(king_position)
+                return square.piece.color == "Black" ? "White" : "Black"
+            end
+        end
+    end
+
+    def draw_message
+        puts "\nStalemate! The game ended in a draw.\n"
+    end
+
+    def winner_message(name)
+        "\nCongrats #{name}! You won!\n"
+    end
+
+    private
+
+    def valid_move_format?(move)
+        move =~ /[a-h][1-8] [a-h][1-8]/ ? true : false
     end
 end

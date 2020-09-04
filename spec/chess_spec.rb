@@ -548,3 +548,120 @@ describe "Player" do
         end
     end
 end
+
+describe "Game" do
+    let(:game) { Game.new }
+    before do
+        allow(game.board).to receive(:print).and_return(nil)
+        allow(game.board).to receive(:puts).and_return(nil)
+    end
+
+    describe "#initialize" do
+        it "starts with a default board and players" do
+            expect(game.board.class).to eql(Board)
+            expect(game.player_one.class).to eql(Player)
+            expect(game.player_two.class).to eql(Player)
+        end
+    end
+
+    describe "#gameover?" do
+        before do 
+            game.board = Board.new
+            allow(game.board).to receive(:print).and_return(nil)
+            allow(game.board).to receive(:puts).and_return(nil)
+        end
+
+        context "when the game cannot continue" do
+            context "when there is a checkmate" do
+                it "returns true" do
+                    game.board.squares[0][0].piece = Piece::King.new("White")
+                    game.board.squares[7][6].piece = Piece::King.new
+                    game.board.squares[6][6].piece = Piece::Queen.new("White")
+                    game.board.squares[5][6].piece = Piece::Rook.new("White")
+
+                    expect(game.gameover?).to eql(true)
+                end
+            end
+            context "when there is a stalemate" do
+                it "returns true" do
+                    game.board.squares[0][1].piece = Piece::King.new("White")
+                    game.board.squares[7][6].piece = Piece::King.new
+                    game.board.squares[5][5].piece = Piece::Queen.new("White")
+                    game.board.squares[5][7].piece = Piece::Rook.new("White")
+
+                    expect(game.gameover?).to eql(true)
+                end
+            end
+        end
+            
+        context "when the game can continue" do
+            it "returns false" do
+                game.board.squares[1][1].piece = Piece::King.new("White")
+                game.board.squares[7][6].piece = Piece::King.new
+                game.board.squares[5][5].piece = Piece::Queen.new("White")
+
+                expect(game.gameover?).to eql(false)
+            end
+        end
+    end
+
+    describe "#play_round" do
+        context "when a player gives a valid move" do
+            it "moves the piece" do
+                piece = game.board.squares[1][0].piece
+                allow(game).to receive(:gets).and_return("a2 a3", "a7 a6")
+                game.play_round
+                
+                expect(game.board.squares[2][0].piece).to eql(piece)
+            end
+        end
+
+        context "when a player gives an invalid move" do
+            it "asks for a valid move before moving" do
+                piece = game.board.squares[1][0].piece
+                allow(game).to receive(:gets).and_return("z5 g7", "a2 a3", "b7 b6")
+                game.play_round
+                
+                expect(game.board.squares[2][0].piece).to eql(piece)
+            end
+        end
+    end
+
+    describe "#play" do
+        before do
+            game.board = Board.new
+            allow(game.board).to receive(:print).and_return(nil)
+            allow(game.board).to receive(:puts).and_return(nil)
+        end
+
+        it "plays rounds until the game is over" do
+            allow(game).to receive(:gets).and_return("f6 d6")
+            game.board.squares[7][3].piece = Piece::King.new("White")
+            game.board.squares[6][3].piece = Piece::Queen.new
+            game.board.squares[5][5].piece = Piece::Rook.new
+            game.board.squares[0][0].piece = Piece::King.new
+            game.play
+        end
+
+        it "declares a winner when there is a checkmate" do
+            allow(game).to receive(:gets).and_return("a6 g6")
+            expect(game).to receive(:puts).at_least(1).times.and_return(
+                game.winner_message("Black") || game.winner_message("White")
+            )
+            game.board.squares[7][6].piece = Piece::King.new("White")
+            game.board.squares[6][6].piece = Piece::Queen.new
+            game.board.squares[5][6].piece = Piece::Rook.new
+            game.board.squares[0][0].piece = Piece::King.new
+            game.play
+        end
+
+        it "declares a draw when there is a stalemate" do
+            allow(game).to receive(:gets).and_return("h5 h6")
+            expect(game).to receive(:puts).at_least(1).times.and_return(game.draw_message)
+            game.board.squares[7][6].piece = Piece::King.new("White")
+            game.board.squares[5][5].piece = Piece::Queen.new
+            game.board.squares[4][7].piece = Piece::King.new
+            game.play
+        end
+    end
+end

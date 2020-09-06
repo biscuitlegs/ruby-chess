@@ -74,12 +74,16 @@ class Board
         end
     end
 
-    def get_position(target_square)
+    def get_array_position(target_square)
         @squares.each_with_index do |row, row_index|
             row.each_with_index do |square, square_index|
                 return [row_index, square_index] if square == target_square
             end
         end
+    end
+
+    def get_human_position(target_square)
+        array_to_human_position(get_array_position(target_square))
     end
 
     def get_moves(human_position, squares=[])
@@ -143,17 +147,16 @@ class Board
 
             king_moves.each do |square|
                 original_piece = square.piece
-                array_position = get_position(square)
-                human_position = array_to_human_position(array_position)
-                move_piece(position, human_position)
+                king_move_position = get_human_position(square)
+                move_piece(position, king_move_position)
         
-                if !in_check?(human_position)
-                    move_piece(human_position, position)
+                if !in_check?(king_move_position)
+                    move_piece(king_move_position, position)
                     square.piece = original_piece
                     return false
                 end
 
-                move_piece(human_position, position)
+                move_piece(king_move_position, position)
                 square.piece = original_piece
             end
         else
@@ -168,22 +171,21 @@ class Board
             ally_squares = @squares.flatten.select { |square| square.piece && square.piece.color == get_square(position).piece.color }
 
             ally_squares.each do |square|
-                square_position = array_to_human_position(get_position(square))
+                square_position = get_human_position(square)
                 square_moves = get_moves(square_position)
 
                 square_moves.each do |move|
                     original_piece = move.piece
-                    array_position = get_position(move)
-                    human_position = array_to_human_position(array_position)
-                    move_piece(square_position, human_position)
+                    move_position = get_human_position(move)
+                    move_piece(square_position, move_position)
             
-                    if !in_check?(human_position)
-                        move_piece(human_position, square_position)
+                    if !in_check?(move_position)
+                        move_piece(move_position, square_position)
                         move.piece = original_piece
                         return false
                     end
 
-                    move_piece(human_position, square_position)
+                    move_piece(move_position, square_position)
                     move.piece = original_piece
                 end
             end
@@ -329,13 +331,8 @@ class Board
         black_pawns = @squares.flatten.select { |square| square.piece && square.piece.name == "Pawn" && square.piece.color == "Black" }
         white_pawns = @squares.flatten.select { |square| square.piece && square.piece.name == "Pawn" && square.piece.color == "White" }
 
-        black_pawns.each do |square|
-            return true if get_position(square)[0] == 7
-        end
-
-        white_pawns.each do |square|
-            return true if get_position(square)[0] == 0
-        end
+        black_pawns.each { |square| return true if get_array_position(square)[0] == 7 }
+        white_pawns.each { |square| return true if get_array_position(square)[0] == 0 }
 
         false
     end
@@ -347,13 +344,17 @@ class Board
         puts "Please choose a piece to promote your Pawn to:"
         choice = gets.chomp
 
-        until choice.capitalize =~ /(Bishop|Rook|Knight|Queen)/
+        until valid_promotion_piece?(choice)
             puts "That is not a valid promotion choice. Please try again:"
             choice = gets.chomp
         end
 
         get_square(position).piece = Object.const_get("Piece::#{choice.capitalize}").new
         get_square(position).piece.color = pawn_color
+    end
+
+    def valid_promotion_piece?(piece)
+        piece =~ /(Bishop|Rook|Knight|Queen)/ ? true : false
     end
 
 
@@ -365,9 +366,7 @@ class Board
         enemy_squares = @squares.flatten.select { |square| square.piece && square.piece.color != king.color }
 
         enemy_squares.each do |square|
-            array_position = get_position(square)
-            human_position = array_to_human_position(array_position)
-           
+            human_position = get_human_position(square)
             return true if get_moves(human_position).include?(get_square(position))
         end
 
@@ -377,10 +376,10 @@ class Board
     def checks_own_king?(start, destination)
         
         ally_king = @squares.flatten.select { |square| square.piece && square.piece.name == "King" && square.piece.color == get_square(start).piece.color }[0]
-        ally_king_position = array_to_human_position(get_position(ally_king))
+
+        ally_king_position = get_human_position(ally_king)
 
         destination_piece = get_square(destination).piece
-
         
         if get_square(start).piece.name == "King"
             move_piece(start, destination)
@@ -593,7 +592,7 @@ class Game
     def gameover?
         king_squares = @board.squares.flatten.select { |square| square.piece && square.piece.name == "King" }
         king_squares.each do |square|
-            king_position = @board.array_to_human_position(@board.get_position(square))
+            king_position = @board.get_human_position(square)
             return true if @board.checkmated?(king_position) || @board.stalemated?(king_position)
         end
 
@@ -603,8 +602,10 @@ class Game
     def get_winning_color
         king_squares = @board.squares.flatten.select { |square| square.piece && square.piece.name == "King" }
         king_squares.each do |square|
-            king_position = @board.array_to_human_position(@board.get_position(square))
+            king_position = @board.get_human_position(square)
+
             return "Draw" if @board.stalemated?(king_position)
+
             if @board.checkmated?(king_position)
                 return square.piece.color == "Black" ? "White" : "Black"
             end

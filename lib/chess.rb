@@ -325,8 +325,39 @@ class Board
         squares
     end
 
+    def pawn_promoted?
+        black_pawns = @squares.flatten.select { |square| square.piece && square.piece.name == "Pawn" && square.piece.color == "Black" }
+        white_pawns = @squares.flatten.select { |square| square.piece && square.piece.name == "Pawn" && square.piece.color == "White" }
 
-    #private
+        black_pawns.each do |square|
+            return true if get_position(square)[0] == 7
+        end
+
+        white_pawns.each do |square|
+            return true if get_position(square)[0] == 0
+        end
+
+        false
+    end
+
+    def promote_pawn(position)
+        pawn_color = get_square(position).piece.color
+
+        puts "Congrats #{pawn_color}! Your Pawn on #{position.upcase} can be promoted!"
+        puts "Please choose a piece to promote your Pawn to:"
+        choice = gets.chomp
+
+        until choice.capitalize =~ /(Bishop|Rook|Knight|Queen)/
+            puts "That is not a valid promotion choice. Please try again:"
+            choice = gets.chomp
+        end
+
+        get_square(position).piece = Object.const_get("Piece::#{choice.capitalize}").new
+        get_square(position).piece.color = pawn_color
+    end
+
+
+    private
 
     def in_check?(position)
         king = get_square(position).piece
@@ -552,6 +583,9 @@ class Game
             end
 
             @board.move_piece(move_choice.split[0], move_choice.split[1])
+
+            @board.promote_pawn(move_choice.split[1]) if @board.pawn_promoted?
+
             break if gameover?
         end
     end

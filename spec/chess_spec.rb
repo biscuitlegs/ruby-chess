@@ -392,6 +392,52 @@ describe "Board" do
             end
         end
     end
+
+    describe "#pawn_promoted?" do
+        let (:board) { Board.new }
+
+        context "when a pawn should be promoted" do
+            it "returns true" do
+                board.squares[0][0].piece = Piece::King.new
+                board.squares[7][7].piece = Piece::Pawn.new
+
+                expect(board.pawn_promoted?).to eql(true)
+            end
+        end
+        context "when a pawn should not be promoted" do
+            it "returns false" do
+                board.squares[3][3].piece = Piece::Pawn.new
+                board.squares[1][1].piece = Piece::Pawn.new("White")
+
+                expect(board.pawn_promoted?).to eql(false)
+            end
+        end
+    end
+
+    describe "#promote_pawn" do
+        let (:board) { Board.new }
+
+        context "when a valid promotion piece is chosen" do
+            it "promotes the pawn to the chosen piece" do
+                allow(board).to receive(:gets).and_return("Queen")
+                board.squares[7][7].piece = Piece::Pawn.new("White")
+                board.promote_pawn("h8")
+
+                expect(board.squares[7][7].piece.name).to eql("Queen")
+                expect(board.squares[7][7].piece.color).to eql("White")
+            end
+        end
+        context "when an invalid promotion piece is chosen" do
+            it "gets a valid piece choice before promoting" do
+                allow(board).to receive(:gets).and_return("Jack", "Queen")
+                board.squares[7][7].piece = Piece::Pawn.new("White")
+                board.promote_pawn("h8")
+
+                expect(board.squares[7][7].piece.name).to eql("Queen")
+                expect(board.squares[7][7].piece.color).to eql("White")
+            end
+        end
+    end
 end
 
 describe "Square" do

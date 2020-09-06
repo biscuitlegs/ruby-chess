@@ -437,6 +437,14 @@ describe "Board" do
                 expect(board.squares[7][7].piece.color).to eql("White")
             end
         end
+        context "when the enemy king is on the destination square" do
+            it "returns false" do
+                board.squares[3][3].piece = Piece::King.new
+                board.squares[0][3].piece = Piece::Queen.new("White")
+
+                expect(board.valid_move?("d1", "d4")).to eql(false)
+            end
+        end
     end
 end
 

@@ -1,4 +1,5 @@
 require_relative "../lib/chess.rb"
+require 'yaml'
 
 describe "Board" do
     let (:square) { double("square") }
@@ -716,6 +717,63 @@ describe "Game" do
             game.board.squares[5][5].piece = Piece::Queen.new
             game.board.squares[4][7].piece = Piece::King.new
             game.play
+        end
+    end
+    
+    describe "#load_game" do
+        let (:loaded_game) { double("game") }
+        let (:loaded_board) { double("board") }
+        let (:loaded_player) { double("player") }
+        let (:loaded_turn_taker) { double("turn_taker") }
+        let (:save) { double("save") }
+        let (:save_list) { [save, save, save] }
+
+        before do
+            allow(Dir).to receive(:glob).and_return(save_list)
+            allow(YAML).to receive(:load).and_return(loaded_game)
+            allow(File).to receive(:read)
+            allow(loaded_game).to receive(:board).and_return(:loaded_board)
+            allow(loaded_game).to receive(:player_one).and_return(:loaded_player)
+            allow(loaded_game).to receive(:player_two).and_return(:loaded_player)
+            allow(loaded_game).to receive(:turn_taker).and_return(:loaded_turn_taker)
+            allow(save).to receive(:match).and_return([])
+        end
+
+        context "when a valid save is chosen" do
+            it "loads the saved game" do
+                allow(game).to receive(:gets).and_return("2")
+                
+                game.load_game
+
+                expect(game.board).to eql(:loaded_board)
+                expect(game.player_one).to eql(:loaded_player)
+                expect(game.player_two).to eql(:loaded_player)
+                expect(game.turn_taker).to eql(:loaded_turn_taker)
+            end
+        end
+        context "when an invalid save is chosen" do
+            it "asks for a valid choice before loading the saved game" do
+                allow(game).to receive(:gets).and_return("5", "2")
+
+                game.load_game
+
+                expect(game.board).to eql(:loaded_board)
+                expect(game.player_one).to eql(:loaded_player)
+                expect(game.player_two).to eql(:loaded_player)
+                expect(game.turn_taker).to eql(:loaded_turn_taker)
+            end
+        end
+    end
+
+    describe "#save_game" do
+        let (:saved_game) { double "saved_game" }
+
+        it "saves the game" do
+            allow(File).to receive(:exists?).and_return(true)
+            allow(YAML).to receive(:dump).and_return(saved_game)
+            allow(File).to receive(:write).with("savegames/#{Time.now.strftime("%d.%m.%y-%H.%M.%S")}.txt", saved_game)
+
+            game.save_game
         end
     end
 end

@@ -546,16 +546,22 @@ class Player
 end
 
 class Game
-    attr_accessor :board, :player_one, :player_two
+    attr_accessor :board, :player_one, :player_two, :turn_taker
 
     def initialize(board=Board.new, player_one=Player.new("Black"), player_two=Player.new("White"))
         @board = board
         @board.setup
         @player_one = player_one
         @player_two = player_two
+        @turn_taker = player_one
     end
 
     def play
+        if savegames_exist?
+            puts "Would you like to load a game? (Y/N)\n"
+            load_game if gets.chomp.upcase == "Y"
+        end
+
         play_round until gameover?
         
         @board.show
@@ -569,12 +575,22 @@ class Game
     end
 
     def play_round
-        [@player_one, @player_two].each do |player|
+        players = @turn_taker == @player_one ? [@player_one, @player_two] : [@player_two, @player_one]
+
+        players.each do |player|
+            @turn_taker = player
+
             @board.show
             puts "It's #{player.name}'s move.\n"
             puts "To move a piece, type it's position and the intended destination, for example: 'd4 e5'."
+            puts "To save your progress type 'save'."
 
             move_choice = gets.chomp
+
+            if move_choice.downcase == "save"
+                save_game
+                redo
+            end
 
             until valid_move_format?(move_choice) && @board.valid_move?(move_choice.split[0], move_choice.split[1]) && player.name == @board.get_square(move_choice.split[0]).piece.color
                 puts "That move is not valid. Please try again:"
@@ -587,6 +603,44 @@ class Game
 
             break if gameover?
         end
+    end
+
+    def load_game
+        puts "Please choose the number of the save you want to load:"
+                
+        save_list = Dir.glob("savegames/*").each_with_index do |file, index|
+            puts "#{index + 1}: #{file.match(/savegames\/(.*)\.txt/)[1]}"
+        end
+
+        save_choice = gets.chomp
+
+        until save_choice =~ /\d/ && save_choice.to_i >= 1 && save_choice.to_i <= save_list.length
+            puts "\nThat is not a valid save file choice. Please choose the number of a save file:"
+            save_choice = gets.chomp
+        end
+        
+        save_list.each_with_index do |save, index|
+            if save_choice.to_i == index + 1
+                loaded_game = YAML.load(File.read("#{save}"))
+                
+                self.board = loaded_game.board
+                self.player_one = loaded_game.player_one
+                self.player_two = loaded_game.player_two
+                self.turn_taker = loaded_game.turn_taker
+            end
+        end
+
+        puts "\nGame successfully loaded!\n\n"
+    end
+
+    def save_game
+        puts "\nSaving your game..."
+
+        Dir.mkdir("savegames") if !File.exists?("savegames")
+        save_file = YAML.dump(self)
+        File.write("savegames/#{Time.now.strftime("%d.%m.%y-%H.%M.%S")}.txt", save_file)
+
+        puts "\nGame saved successfully!\n"
     end
 
     def gameover?
@@ -621,6 +675,10 @@ class Game
     end
 
     private
+
+    def savegames_exist?
+        Dir.exists?("savegames") && !Dir.empty?("savegames") ? true : false
+    end
 
     def valid_move_format?(move)
         move =~ /[a-h][1-8] [a-h][1-8]/ ? true : false

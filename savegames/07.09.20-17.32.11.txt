@@ -1,0 +1,200 @@
+--- !ruby/object:Game
+board: !ruby/object:Board
+  squares:
+  - - !ruby/object:Square
+      piece: !ruby/object:Piece::Rook
+        name: Rook
+        color: Black
+    - !ruby/object:Square
+      piece: !ruby/object:Piece::Knight
+        name: Knight
+        color: Black
+    - !ruby/object:Square
+      piece: !ruby/object:Piece::Bishop
+        name: Bishop
+        color: Black
+    - !ruby/object:Square
+      piece: !ruby/object:Piece::Queen
+        name: Queen
+        color: Black
+    - !ruby/object:Square
+      piece: !ruby/object:Piece::King
+        name: King
+        color: Black
+    - !ruby/object:Square
+      piece: !ruby/object:Piece::Bishop
+        name: Bishop
+        color: Black
+    - !ruby/object:Square
+      piece: !ruby/object:Piece::Knight
+        name: Knight
+        color: Black
+    - !ruby/object:Square
+      piece: !ruby/object:Piece::Rook
+        name: Rook
+        color: Black
+  - - !ruby/object:Square
+      piece: 
+    - !ruby/object:Square
+      piece: !ruby/object:Piece::Pawn
+        name: Pawn
+        color: Black
+    - !ruby/object:Square
+      piece: !ruby/object:Piece::Pawn
+        name: Pawn
+        color: Black
+    - !ruby/object:Square
+      piece: !ruby/object:Piece::Pawn
+        name: Pawn
+        color: Black
+    - !ruby/object:Square
+      piece: !ruby/object:Piece::Pawn
+        name: Pawn
+        color: Black
+    - !ruby/object:Square
+      piece: !ruby/object:Piece::Pawn
+        name: Pawn
+        color: Black
+    - !ruby/object:Square
+      piece: !ruby/object:Piece::Pawn
+        name: Pawn
+        color: Black
+    - !ruby/object:Square
+      piece: !ruby/object:Piece::Pawn
+        name: Pawn
+        color: Black
+  - - !ruby/object:Square
+      piece: !ruby/object:Piece::Pawn
+        name: Pawn
+        color: Black
+    - !ruby/object:Square
+      piece: 
+    - !ruby/object:Square
+      piece: 
+    - !ruby/object:Square
+      piece: 
+    - !ruby/object:Square
+      piece: 
+    - !ruby/object:Square
+      piece: 
+    - !ruby/object:Square
+      piece: 
+    - !ruby/object:Square
+      piece: 
+  - - !ruby/object:Square
+      piece: 
+    - !ruby/object:Square
+      piece: 
+    - !ruby/object:Square
+      piece: 
+    - !ruby/object:Square
+      piece: 
+    - !ruby/object:Square
+      piece: 
+    - !ruby/object:Square
+      piece: 
+    - !ruby/object:Square
+      piece: 
+    - !ruby/object:Square
+      piece: 
+  - - !ruby/object:Square
+      piece: 
+    - !ruby/object:Square
+      piece: 
+    - !ruby/object:Square
+      piece: 
+    - !ruby/object:Square
+      piece: 
+    - !ruby/object:Square
+      piece: 
+    - !ruby/object:Square
+      piece: 
+    - !ruby/object:Square
+      piece: 
+    - !ruby/object:Square
+      piece: 
+  - - !ruby/object:Square
+      piece: 
+    - !ruby/object:Square
+      piece: 
+    - !ruby/object:Square
+      piece: 
+    - !ruby/object:Square
+      piece: 
+    - !ruby/object:Square
+      piece: 
+    - !ruby/object:Square
+      piece: 
+    - !ruby/object:Square
+      piece: 
+    - !ruby/object:Square
+      piece: 
+  - - !ruby/object:Square
+      piece: !ruby/object:Piece::Pawn
+        name: Pawn
+        color: White
+    - !ruby/object:Square
+      piece: !ruby/object:Piece::Pawn
+        name: Pawn
+        color: White
+    - !ruby/object:Square
+      piece: !ruby/object:Piece::Pawn
+        name: Pawn
+        color: White
+    - !ruby/object:Square
+      piece: !ruby/object:Piece::Pawn
+        name: Pawn
+        color: White
+    - !ruby/object:Square
+      piece: !ruby/object:Piece::Pawn
+        name: Pawn
+        color: White
+    - !ruby/object:Square
+      piece: !ruby/object:Piece::Pawn
+        name: Pawn
+        color: White
+    - !ruby/object:Square
+      piece: !ruby/object:Piece::Pawn
+        name: Pawn
+        color: White
+    - !ruby/object:Square
+      piece: !ruby/object:Piece::Pawn
+        name: Pawn
+        color: White
+  - - !ruby/object:Square
+      piece: !ruby/object:Piece::Rook
+        name: Rook
+        color: White
+    - !ruby/object:Square
+      piece: !ruby/object:Piece::Knight
+        name: Knight
+        color: White
+    - !ruby/object:Square
+      piece: !ruby/object:Piece::Bishop
+        name: Bishop
+        color: White
+    - !ruby/object:Square
+      piece: !ruby/object:Piece::Queen
+        name: Queen
+        color: White
+    - !ruby/object:Square
+      piece: !ruby/object:Piece::King
+        name: King
+        color: White
+    - !ruby/object:Square
+      piece: !ruby/object:Piece::Bishop
+        name: Bishop
+        color: White
+    - !ruby/object:Square
+      piece: !ruby/object:Piece::Knight
+        name: Knight
+        color: White
+    - !ruby/object:Square
+      piece: !ruby/object:Piece::Rook
+        name: Rook
+        color: White
+player_one: !ruby/object:Player
+  name: Black
+player_two: &1 !ruby/object:Player
+  name: White
+turn_taker: *1
